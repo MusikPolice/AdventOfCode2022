@@ -60,7 +60,8 @@ hs_err_pid*
 
 # IntelliJ
 out/
+build/
 
 # Gradle
-gradle
+gradle/
 .gradle
