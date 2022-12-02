@@ -1,7 +1,7 @@
 package ca.jonathanfritz.adventofcode2022.day1
 
 /**
- * https://adventofcode.com/2022/day/1
+ * Part 1 of https://adventofcode.com/2022/day/1
  */
 class CalorieCounting {
 
