@@ -18,6 +18,6 @@ internal class CalorieCountingTest {
     @Test
     fun `count calories`() {
         val lines = readResourcesFile("day1/CalorieCounting.txt")
-        println(calorieCounting.count(lines))
+        assertEquals(65912, calorieCounting.count(lines))
     }
 }

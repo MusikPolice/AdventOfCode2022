@@ -18,7 +18,7 @@ internal class TopThreeTest {
     @Test
     fun `top three`() {
         val lines = readResourcesFile("day1/CalorieCounting.txt")
-        println(topThree.sum(lines))
+        assertEquals(195625, topThree.sum(lines))
     }
 
 }

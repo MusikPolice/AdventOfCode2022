@@ -6,17 +6,19 @@ package ca.jonathanfritz.adventofcode2022.day1
 class TopThree {
 
     fun sum(lines: List<String>): Int {
-        val sums: MutableList<Int> = mutableListOf()
+        var top3: MutableList<Int> = mutableListOf()
         var sum = 0
         lines.forEach {
             if (it.isBlank()) {
-                sums.add(sum)
+                top3.add(sum)
+                top3.sortDescending()
+                top3 = top3.take(3).toMutableList()
                 sum = 0
             } else {
                 sum += it.toInt()
             }
         }
-        sums.sortDescending()
-        return sums.take(3).sum()
+
+        return top3.sum()
     }
 }
