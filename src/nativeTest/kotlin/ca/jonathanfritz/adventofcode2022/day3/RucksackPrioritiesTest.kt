@@ -31,4 +31,16 @@ internal class RucksackPrioritiesTest {
         val lines = readResourcesFile("day3/rucksack.txt")
         assertEquals(7795, rucksackPriorities.getDuplicateItemScores(lines))
     }
+
+    @Test
+    fun `Group Badge scores Test`() {
+        val lines = readTestResourcesFile("day3/rucksack.txt")
+        assertEquals(70, rucksackPriorities.getGroupBadgeScores(lines))
+    }
+
+    @Test
+    fun `Group Badge scores`() {
+        val lines = readResourcesFile("day3/rucksack.txt")
+        assertEquals(2703, rucksackPriorities.getGroupBadgeScores(lines))
+    }
 }
