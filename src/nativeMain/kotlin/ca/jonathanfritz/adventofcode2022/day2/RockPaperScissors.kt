@@ -5,14 +5,14 @@ class RockPaperScissors {
     fun tournamentScore(rounds: List<String>): Int {
         return rounds.filter { it.isNotBlank() }.sumOf {
             val chars = it.split(" ")
-            scoreRound(chars[0].toShape(), chars[1].toShape())
+            scoreRound(Shape.fromString(chars[0]), Shape.fromString(chars[1]))
         }
     }
 
     // The score for a single round is the score for the shape you selected plus the score for the outcome of the round
-    fun scoreRound(theirs: Shape, mine: Shape): Int = mine.score + getOutcome(mine, theirs).score
+    private fun scoreRound(theirs: Shape, mine: Shape): Int = mine.score + getOutcome(mine, theirs).score
 
-    fun getOutcome(mine: Shape, theirs: Shape): Outcome {
+    private fun getOutcome(mine: Shape, theirs: Shape): Outcome {
         // If both players choose the same shape, the round instead ends in a draw.
         if (mine == theirs) {
             return Outcome.DRAW
@@ -32,6 +32,12 @@ class RockPaperScissors {
         ROCK("A", "X", score = 1),
         PAPER("B", "Y", score = 2),
         SCISSORS("C", "Z", score = 3);
+
+        companion object {
+            fun fromString(str: String): Shape {
+                return RockPaperScissors.Shape.values().first { it.chars.contains(str.trim().uppercase()) }
+            }
+        }
     }
 
     enum class Outcome(val score: Int) {
@@ -40,8 +46,4 @@ class RockPaperScissors {
         LOSE(0),
         DRAW(3)
     }
-}
-
-fun String.toShape(): RockPaperScissors.Shape {
-    return RockPaperScissors.Shape.values().first { it.chars.contains(this.trim().uppercase()) }
 }
