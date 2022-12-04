@@ -10,14 +10,26 @@ internal class AssignmentPairsTest {
     private val ap = AssignmentPairs()
 
     @Test
-    fun `Assignment Pairs Test`() {
+    fun `Assignment Overlaps Test`() {
         val lines = readTestResourcesFile("day4/assignments.txt")
         assertEquals(2, ap.countAssignmentOverlaps(lines))
     }
 
     @Test
-    fun `Assignment Pairs`() {
+    fun `Assignment Overlaps`() {
         val lines = readResourcesFile("day4/assignments.txt")
         assertEquals(448, ap.countAssignmentOverlaps(lines))
+    }
+
+    @Test
+    fun `Assignment Intersections Test`() {
+        val lines = readTestResourcesFile("day4/assignments.txt")
+        assertEquals(4, ap.countAssignmentIntersections(lines))
+    }
+
+    @Test
+    fun `Assignment Intersections`() {
+        val lines = readResourcesFile("day4/assignments.txt")
+        assertEquals(794, ap.countAssignmentIntersections(lines))
     }
 }
