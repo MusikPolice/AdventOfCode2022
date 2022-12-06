@@ -45,4 +45,16 @@ internal class StacksOfCratesTest {
         val lines = readResourcesFile("day5/crates.txt")
         assertEquals("RLFNRTNFB", stacksOfCrates.part1(lines))
     }
+
+    @Test
+    fun `Crate Stacking Multiple Test`() {
+        val lines = readTestResourcesFile("day5/crates.txt")
+        assertEquals("MCD", stacksOfCrates.part2(lines))
+    }
+
+    @Test
+    fun `Crate Stacking Multiple`() {
+        val lines = readResourcesFile("day5/crates.txt")
+        assertEquals("MHQTLJRLB", stacksOfCrates.part2(lines))
+    }
 }

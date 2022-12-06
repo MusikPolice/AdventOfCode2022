@@ -15,10 +15,28 @@ class StacksOfCrates {
 
         // execute each operation
         operations.forEach { op ->
-            (0 until op.count).forEach { i ->
+            (0 until op.count).forEach { _ ->
                 // if source stack was empty, this will throw a null ref exception
                 stacks[op.sink].push(stacks[op.source].pop()!!)
             }
+        }
+
+        // return the top letter on each stack
+        return stacks.map { it.pop() ?: "" }.joinToString("")
+    }
+
+    fun part2(lines: List<String>): String {
+        // parse the initial state of each stack
+        val initialState = lines.takeWhile { it.isNotBlank() }.toList()
+        val stacks = parseInitialState(initialState)
+
+        // parse the operations that will be executed against that state
+        val instructions = lines.subList(initialState.size + 1, lines.size)
+        val operations = parseOperations(instructions)
+
+        // execute each operation
+        operations.forEach { op ->
+            stacks[op.sink].push(stacks[op.source].pop(op.count))
         }
 
         // return the top letter on each stack
@@ -66,7 +84,14 @@ class StacksOfCrates {
     class Stack<T>(size: Int) {
         private val internal: MutableList<T> = ArrayList(size)
         fun push(entity: T) = internal.add(0, entity)
+        fun push(entities: List<T>) = internal.addAll(0, entities)
         fun pop(): T? = if (internal.isNotEmpty()) internal.removeAt(0) else null
+        fun pop(count: Int): List<T> {
+            if (internal.size >= count) {
+                return (0 until count).map { internal.removeAt(0) }
+            }
+            return emptyList()
+        }
         override fun toString(): String {
             return "t$internal"
         }
