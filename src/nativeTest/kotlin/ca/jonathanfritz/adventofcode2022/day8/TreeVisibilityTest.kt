@@ -21,4 +21,16 @@ internal class TreeVisibilityTest {
         val lines = readResourcesFile("day8/TreeVisibility.txt")
         assertEquals(1845, treeVisibility.part1(lines))
     }
+
+    @Test
+    fun `Scenic score test`() {
+        val lines = readTestResourcesFile("day8/TreeVisibility.txt")
+        assertEquals(8, treeVisibility.part2(lines))
+    }
+
+    @Test
+    fun `Scenic score`() {
+        val lines = readResourcesFile("day8/TreeVisibility.txt")
+        assertEquals(230112, treeVisibility.part2(lines))
+    }
 }
