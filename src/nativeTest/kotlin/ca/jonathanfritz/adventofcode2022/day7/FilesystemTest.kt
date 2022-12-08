@@ -20,4 +20,16 @@ internal class FilesystemTest {
         val lines = readResourcesFile("day7/terminal.txt")
         assertEquals(1391690, fs.part1(lines))
     }
+
+    @Test
+    fun `Delete directories test`() {
+        val lines = readTestResourcesFile("day7/terminal.txt")
+        assertEquals(24933642, fs.part2(lines))
+    }
+
+    @Test
+    fun `Delete directories`() {
+        val lines = readResourcesFile("day7/terminal.txt")
+        assertEquals(5469168, fs.part2(lines))
+    }
 }

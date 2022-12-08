@@ -22,6 +22,26 @@ class Filesystem {
         return sum
     }
 
+    fun part2(lines: List<String>): Long {
+        // parse the directory tree
+        val root: Directory = parse(lines)
+        val spaceAvailable = 70000000 - root.size()
+        val spaceToBeDeleted = 30000000 - spaceAvailable
+
+        // find the smallest directory that is larger than spaceToBeDeleted
+        var minSize = Long.MAX_VALUE
+        val toScan: MutableList<Directory> = mutableListOf(root)
+        while (toScan.isNotEmpty()) {
+            val dir = toScan.removeAt(0)
+            val size = dir.size()
+            if (size in spaceToBeDeleted until minSize) {
+                minSize = size
+            }
+            toScan.addAll(dir.directories)
+        }
+        return minSize
+    }
+
     private fun parse(lines: List<String>): Directory {
         val root = Directory("/")
         var dir = root
