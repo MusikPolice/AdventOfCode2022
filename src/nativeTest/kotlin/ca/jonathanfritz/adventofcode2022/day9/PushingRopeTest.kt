@@ -20,4 +20,16 @@ internal class PushingRopeTest {
         val lines = readResourcesFile("day9/rope.txt")
         assertEquals(6023, pushingRope.part1(lines))
     }
+
+    @Test
+    fun `Ten knot test`() {
+        val lines = readTestResourcesFile("day9/rope.txt")
+        assertEquals(1, pushingRope.part2(lines))
+    }
+
+    @Test
+    fun `Ten knots`() {
+        val lines = readResourcesFile("day9/rope.txt")
+        assertEquals(2533, pushingRope.part2(lines))
+    }
 }

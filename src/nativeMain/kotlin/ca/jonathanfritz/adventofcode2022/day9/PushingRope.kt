@@ -5,61 +5,51 @@ import kotlin.math.max
 class PushingRope {
 
     fun part1(lines: List<String>): Int {
+        return pullRope(lines, 2)
+    }
+
+    fun part2(lines: List<String>): Int {
+        return pullRope(lines, 10)
+    }
+
+    private fun pullRope(lines: List<String>, numKnots: Int): Int {
         val tails: MutableSet<Point> = mutableSetOf()
 
-        var rope = Rope()
+        var rope = Rope((0 until numKnots).map { Point() })
         lines.forEach {
             val direction = it.split(" ")[0]
             val steps = it.split(" ")[1].toInt()
 
-            // println("== Instruction:$it ==")
             for (i in 0 until steps) {
                 rope = rope.pull(direction)
-                tails.add(rope.tail)
+                tails.add(rope.knots.last())
             }
-            // println(rope.toString())
         }
 
         return tails.distinct().count()
     }
 
+
     data class Rope(
-        val head: Point = Point(),
-        val tail: Point = Point()
+        val knots: List<Point>
     ) {
         fun pull(direction: String): Rope {
-            val newHead = when (direction) {
-                "U" -> head.moveUp()
-                "L" -> head.moveLeft()
-                "D" -> head.moveDown()
-                "R" -> head.moveRight()
+            // move the head (i.e. the zeroth knot)
+            val head = when (direction) {
+                "U" -> knots[0].moveUp()
+                "L" -> knots[0].moveLeft()
+                "D" -> knots[0].moveDown()
+                "R" -> knots[0].moveRight()
                 else -> throw IllegalArgumentException("Direction $direction is not supported")
             }
-            val newTail = tail.follow(newHead)
-            return Rope(newHead, newTail)
-        }
 
-        override fun toString(): String {
-            val width = max(6, max(head.x, tail.x))
-            val height = max(6, max(head.y, tail.y))
-            val sb = StringBuilder()
-            (height - 1 downTo 0).forEach { y ->
-                (0 until width).forEach { x ->
-                    sb.append(
-                        if (x == head.x && y == head.y) {
-                            "H"
-                        } else if (x == tail.x && y == tail.y) {
-                            "T"
-                        } else if (x == 0 && y == 0) {
-                            "s"
-                        } else {
-                            "."
-                        }
-                    )
-                }
-                sb.appendLine()
+            // propagate the movement through the remaining knots, with each following the previous
+            val newKnots: MutableList<Point> = mutableListOf(head)
+            for (i in (1 until knots.size)) {
+                newKnots.add(knots[i].follow(newKnots[i-1]))
             }
-            return sb.toString()
+
+            return Rope(newKnots)
         }
     }
 
@@ -76,32 +66,32 @@ class PushingRope {
             val xDist = other.x - x
             val yDist = other.y - y
 
-            // if yDist == 0, move is strictly left or right
+            // left and right moves
             if (yDist == 0) {
                 if (xDist > 1) return this.moveRight()
                 else if (xDist < -1) return this.moveLeft()
             }
 
-            // if xDist == 0, move is strictly up or down
+            // up and down moves
             if (xDist == 0) {
                 if (yDist > 1) return this.moveUp()
                 else if (yDist < -1) return this.moveDown()
             }
 
-            // if xDist == 1 || xDist == -1, move is diagonal
-            if (xDist == 1) {
+            // left and right diagonal moves
+            if (xDist >= 1) {
                 if (yDist > 1) return this.moveUp().moveRight()
                 if (yDist < -1) return this.moveDown().moveRight()
-            } else if (xDist == -1) {
+            } else if (xDist <= -1) {
                 if (yDist > 1) return this.moveUp().moveLeft()
                 if (yDist < -1) return this.moveDown().moveLeft()
             }
 
-            // if yDist == 1 || yDist == -1, move is diagonal
-            if (yDist == 1) {
+            // up and down diagonal moves
+            if (yDist >= 1) {
                 if (xDist > 1) return this.moveRight().moveUp()
                 if (xDist < -1) return this.moveLeft().moveUp()
-            } else if (yDist == -1) {
+            } else if (yDist <= -1) {
                 if (xDist > 1) return this.moveRight().moveDown()
                 if (xDist < -1) return this.moveLeft().moveDown()
             }
