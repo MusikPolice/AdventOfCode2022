@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 internal class CrtTest {
 
     private val crt = Crt()
-    
+
     @Test
     fun signalStrengthTest() {
         val lines = readTestResourcesFile("day10/instructions.txt")
@@ -19,5 +19,17 @@ internal class CrtTest {
     fun signalStrength() {
         val lines = readResourcesFile("day10/instructions.txt")
         assertEquals(14160, crt.part1(lines))
+    }
+
+    @Test
+    fun drawingTest() {
+        val lines = readTestResourcesFile("day10/instructions.txt")
+        crt.part2(lines)
+    }
+
+    @Test
+    fun drawing() {
+        val lines = readResourcesFile("day10/instructions.txt")
+        crt.part2(lines)
     }
 }
