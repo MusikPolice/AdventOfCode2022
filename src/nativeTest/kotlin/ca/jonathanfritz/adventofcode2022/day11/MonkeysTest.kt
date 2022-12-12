@@ -2,6 +2,7 @@ package ca.jonathanfritz.adventofcode2022.day11
 
 import ca.jonathanfritz.adventofcode2022.readResourcesFile
 import ca.jonathanfritz.adventofcode2022.readTestResourcesFile
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,5 +20,12 @@ internal class MonkeysTest {
     fun `Monkey business`() {
         val lines = readResourcesFile("day11/monkeybusiness.txt")
         assertEquals(55944, monkeys.part1(lines))
+    }
+
+    @Test
+    @Ignore
+    fun `Monkey business 10k rounds test`() {
+        val lines = readTestResourcesFile("day11/monkeybusiness.txt")
+        assertEquals(2713310158L, monkeys.part2(lines).toLong())
     }
 }

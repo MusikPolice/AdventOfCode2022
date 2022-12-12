@@ -1,6 +1,5 @@
 package ca.jonathanfritz.adventofcode2022.day11
 
-import kotlin.math.ceil
 import kotlin.math.floor
 
 class Monkeys {
@@ -9,7 +8,7 @@ class Monkeys {
         val monkeys = parseInput(lines)
 
         for (round in 0 until 20) {
-            monkeys.forEach { m -> println("\nMonkey ${monkeys.indexOf(m)}"); m.evaluate(monkeys) }
+            monkeys.forEach { m -> m.evaluate(monkeys) }
 
             println("After Round $round:")
             monkeys.forEachIndexed { i, m ->
@@ -25,7 +24,25 @@ class Monkeys {
         return monkeys.map { it.inspectionCount }.sortedByDescending { it }.take(2).multiply()
     }
 
-    private fun parseInput(lines: List<String>): List<Monkey> {
+    fun part2(lines: List<String>): Int {
+        val monkeys = parseInput(lines, false)
+
+        for (round in 0 until 10000) {
+            monkeys.forEach { m -> m.evaluate(monkeys) }
+
+             if (round % 20 == 0 || round % 1000 == 0) {
+                println("Round $round:")
+                monkeys.forEachIndexed { i, m ->
+                    println("Monkey $i inspected items ${m.inspectionCount} times")
+                }
+                println()
+            }
+        }
+
+        return monkeys.map { it.inspectionCount }.sortedByDescending { it }.take(2).multiply()
+    }
+
+    private fun parseInput(lines: List<String>, manageWorry: Boolean = true): List<Monkey> {
         // input is grouped into chunks of seven lines (including trailing newline)
         return (lines.indices step 7).map { offset ->
             val chunk = lines.subList(offset, offset + 6).map { it.trim() }
@@ -41,9 +58,17 @@ class Monkeys {
             val operands = listOf(expression[0].toIntOrNull(), expression[2].toIntOrNull())
             // null operands are replaced with the input value for old
             val operation = if (operator == "+") {
-                { old: Int -> floor(ceil(((operands[0] ?: old) + (operands[1] ?: old)).toDouble()) / 3f ).toInt() }
+                if (manageWorry) {
+                    { old: Int -> floor(((operands[0] ?: old) + (operands[1] ?: old)).toDouble() / 3f).toInt() }
+                } else {
+                    { old: Int -> ((operands[0] ?: old) + (operands[1] ?: old)) % Int.MAX_VALUE }
+                }
             } else {
-                { old: Int -> floor(ceil(((operands[0] ?: old) * (operands[1] ?: old)).toDouble()) / 3f ).toInt() }
+                if (manageWorry) {
+                    { old: Int -> floor(((operands[0] ?: old) * (operands[1] ?: old).toDouble()) / 3f).toInt() }
+                } else {
+                    { old: Int -> ((operands[0] ?: old) * (operands[1] ?: old))  % Int.MAX_VALUE }
+                }
             }
 
             // lines 4-5 contain a divisibility test and the monkey to throw an item to if it passes or fails
@@ -68,13 +93,8 @@ class Monkeys {
         fun evaluate(monkeys: List<Monkey>) {
             (items.indices).map { i ->
                 this.inspectionCount++
-
-                println("Inspecting item ${items[i]}")
                 val worryLevel = operation.invoke(items[i])
-                println("   Worry level: $worryLevel")
                 val toMonkey = test.invoke(worryLevel)
-                println ("   Thrown to: Monkey $toMonkey")
-
                 Evaluation(items[i], worryLevel, toMonkey)
             }.forEach {
                 // the item retains the new worry level when thrown
@@ -91,6 +111,7 @@ class Monkeys {
     }
 
     private fun List<Int>.multiply(): Int {
+        println("Multiplying $this")
         var sum: Int = this.first()
         this.takeLast(this.size - 1).forEach {
             sum *= it
