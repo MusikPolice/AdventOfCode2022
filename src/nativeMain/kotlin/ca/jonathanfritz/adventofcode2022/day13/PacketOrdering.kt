@@ -34,7 +34,7 @@ class PacketOrdering {
         return packets.toList()
     }
 
-    fun String.toListNode(): PacketOrdering.ListNode {
+    private fun String.toListNode(): ListNode {
         val stack: Stack<String> = Stack(this.replace(",", "").length)
         val chunks = this.split(",")
         for (chunk in chunks) {
@@ -78,6 +78,8 @@ class PacketOrdering {
                 }
             }
         }
+
+        return ListNode(emptyList())
     }
 
     private fun String.isNumeric(): Boolean = this.toIntOrNull() != null
