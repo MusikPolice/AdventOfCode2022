@@ -20,4 +20,16 @@ internal class FallingSandTest {
         val lines = readResourcesFile("day14/rocks.txt")
         assertEquals(715, fallingSand.part1(lines))
     }
+
+    @Test
+    fun `Falling Sand with Floor Test`() {
+        val lines = readTestResourcesFile("day14/rocks.txt")
+        assertEquals(93, fallingSand.part2(lines))
+    }
+
+    @Test
+    fun `Falling Sand with Floor`() {
+        val lines = readResourcesFile("day14/rocks.txt")
+        assertEquals(25248, fallingSand.part2(lines))
+    }
 }

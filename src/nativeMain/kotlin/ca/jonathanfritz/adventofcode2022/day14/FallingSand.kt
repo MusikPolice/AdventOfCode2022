@@ -28,8 +28,37 @@ class FallingSand {
         }
     }
 
+    fun part2(lines: List<String>): Int {
+        // sand no longer falls into the abyss
+        val (_, grid) = parseInput(lines, abyss = false)
+        val sandSpawn = Point(500, 0)
+
+        var unitsOfSand = 0
+        while (true) {
+            var sand = Sand(sandSpawn)
+            unitsOfSand++
+            if (grid.entityExistsBelow(sand.position) && grid.entityExistsBelowLeft(sand.position) && grid.entityExistsBelowRight(sand.position)) {
+                // no minus one b/c we have to account for sand resting at the spawn point
+                println("$unitsOfSand units of sand were dropped before there was no room for more")
+                return unitsOfSand
+            }
+
+            while (true) {
+                val newSand = sand.move(grid)
+                if (newSand != null) {
+                    sand = newSand
+                } else {
+                    // sand has come to a steady state - place it within the grid
+                    grid.put(sand)
+                    break
+                }
+            }
+        }
+    }
+
     private fun parseInput(
-        lines: List<String>
+        lines: List<String>,
+        abyss: Boolean = true
     ): Pair<Int, Grid> {
         val grid = Grid()
         var maxYOfRock = Int.MIN_VALUE
@@ -80,6 +109,9 @@ class FallingSand {
                 prev = cur
             }
         }
+        if (!abyss) {
+            grid.setFloorHeight(maxYOfRock + 2)
+        }
         return maxYOfRock to grid
     }
 
@@ -118,12 +150,12 @@ class FallingSand {
         fun moveDownRight(): Point = this.copy(y = y+1, x = x+1)
     }
 
-    class Grid() {
+    class Grid {
         // grid is a map of x to y to a nullable entity that could be either rock or sand
         private val _grid: MutableMap<Int, MutableMap<Int, Entity?>> = mutableMapOf()
+        private var floorY: Int? = null
 
         fun put(entity: Entity) {
-            println("Placed ${entity::class.simpleName} at ${entity.position}")
             val row = _grid[entity.position.x]
             if (row == null) {
                 _grid[entity.position.x] = mutableMapOf(entity.position.y to entity)
@@ -133,8 +165,25 @@ class FallingSand {
             }
         }
 
-        fun entityExistsBelow(point: Point) = _grid[point.x]?.get(point.y+1) != null
-        fun entityExistsBelowLeft(point: Point) = _grid[point.x-1]?.get(point.y+1) != null
-        fun entityExistsBelowRight(point: Point) = _grid[point.x+1]?.get(point.y+1) != null
+        fun setFloorHeight(y: Int) {
+            println("Set floor height to $y")
+            floorY = y
+        }
+
+        fun entityExistsBelow(point: Point): Boolean {
+            val entity = _grid[point.x]?.get(point.y+1) != null
+            val floor = point.y+1 >= (floorY ?: Int.MAX_VALUE)
+            return entity || floor
+        }
+        fun entityExistsBelowLeft(point: Point): Boolean {
+            val entity = _grid[point.x-1]?.get(point.y+1) != null
+            val floor = point.y+1 >= (floorY ?: Int.MAX_VALUE)
+            return entity || floor
+        }
+        fun entityExistsBelowRight(point: Point): Boolean {
+            val entity = _grid[point.x+1]?.get(point.y+1) != null
+            val floor = point.y+1 >= (floorY ?: Int.MAX_VALUE)
+            return entity || floor
+        }
     }
 }
